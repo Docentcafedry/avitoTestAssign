@@ -53,7 +53,7 @@ async def generate_slug(
 
 
 @app.post("/custom/short_url", status_code=status.HTTP_201_CREATED)
-async def generate_slug_from_custom_url(
+async def generate_custom_slug(
     long_url: Annotated[str, Body(embed=True)],
     slug: Annotated[str, Body(embed=True, max_length=10)],
     session: db_connection,
