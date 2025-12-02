@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Short URL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f9;
+            padding: 40px;
+        }
+        .container {
+            max-width: 480px;
+            padding: 20px;
+            margin: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        button {
+            background: #4a6cf7;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        button:hover {
+            background: #3858d6;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f4ff;
+            border-left: 4px solid #4a6cf7;
+            display: none;
+        }
+        .error {
+            background: #ffe8e8;
+            border-left: 4px solid #e63946;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Create a Short URL</h2>
+
+    <form id="shortForm">
+        <label for="long_url">Enter Long URL:</label>
+        <input type="url" id="long_url" name="long_url" required placeholder="https://example.com/page">
+        <button type="submit">Generate Short URL</button>
+    </form>
+
+    <div id="responseBox" class="result"></div>
+</div>
+
+<script>
+    const form = document.getElementById("shortForm");
+    const responseBox = document.getElementById("responseBox");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        responseBox.style.display = "none";
+
+        const long_url = document.getElementById("long_url").value;
+
+        try {
+            const res = await fetch("http://127.0.0.1:8000/short_url", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ long_url })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.detail || "Error occurred");
+            }
+
+            responseBox.className = "result";
+            responseBox.innerHTML = `<strong>Short URL slug:</strong> ${data.data}`;
+            responseBox.style.display = "block";
+
+        } catch (err) {
+            responseBox.className = "result error";
+            responseBox.innerHTML = "Error: " + err.message;
+            responseBox.style.display = "block";
+        }
+    });
+</script>
+
+</body>
+</html>
