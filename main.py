@@ -3,7 +3,11 @@ from db import engine, Base
 from fastapi import FastAPI, Body, HTTPException, status
 from typing import Annotated
 from depends import db_connection
-from service import generate_short_url, get_url_by_slug
+from service import (
+    generate_short_url,
+    get_url_by_slug,
+    generate_short_url_with_custom_slug,
+)
 from exceptions import SlugAlreadyExistsError, NoLongUrlFoundError, URLValidationError
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -46,6 +50,31 @@ async def generate_slug(
             )
 
     return {"data": new_slug}
+
+
+@app.post("/custom/short_url", status_code=status.HTTP_201_CREATED)
+async def generate_slug_from_custom_url(
+    long_url: Annotated[str, Body(embed=True)],
+    slug: Annotated[str, Body(embed=True, max_length=10)],
+    session: db_connection,
+):
+    try:
+        await generate_short_url_with_custom_slug(
+            long_url=long_url, slug=slug, session=session
+        )
+    except (SlugAlreadyExistsError, URLValidationError) as e:
+        if isinstance(e, SlugAlreadyExistsError):
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Error during slug generation",
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Validation URL error",
+            )
+
+    return {"data": slug}
 
 
 @app.get("/{slug}", status_code=status.HTTP_302_FOUND)
