@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 from db import engine, Base
 from fastapi import FastAPI, Body, HTTPException, status
@@ -11,6 +12,15 @@ from service import (
 from exceptions import SlugAlreadyExistsError, NoLongUrlFoundError, URLValidationError
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
+from middlewares import RequestLoggingMiddleware
+
+
+logging.basicConfig(
+    filename="app.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -21,6 +31,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.add_middleware(RequestLoggingMiddleware, logger=logger)
 
 app.add_middleware(
     CORSMiddleware,

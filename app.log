@@ -1,0 +1,9 @@
+2025-12-03 18:04:08,009 - INFO - main - Request: GET / from 127.0.0.1
+2025-12-03 18:04:08,012 - INFO - main - Response: GET / returned 404 to 127.0.0.1
+2025-12-03 18:04:08,383 - INFO - main - Request: GET /favicon.ico from 127.0.0.1
+2025-12-03 18:04:11,023 - INFO - main - Request: GET /docs from 127.0.0.1
+2025-12-03 18:04:11,024 - INFO - main - Response: GET /docs returned 200 to 127.0.0.1
+2025-12-03 18:04:11,190 - INFO - main - Request: GET /openapi.json from 127.0.0.1
+2025-12-03 18:04:11,202 - INFO - main - Response: GET /openapi.json returned 200 to 127.0.0.1
+2025-12-03 18:04:50,462 - INFO - main - Request: POST /short_url from 127.0.0.1
+2025-12-03 18:04:50,482 - INFO - main - Response: POST /short_url returned 201 to 127.0.0.1
