@@ -15,4 +15,5 @@ dependencies = [
     "python-dotenv>=1.2.1",
     "setuptools>=80.9.0",
     "sqlalchemy[asyncio]>=2.0.44",
+    "toml-to-requirements>=0.3.0",
 ]
